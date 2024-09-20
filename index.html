@@ -71,8 +71,8 @@
                     dateArray.push(formattedDate);
                 });
 
-                // Update the button's data attribute with the joined dateArray
-                document.getElementById("copyButton").setAttribute("data-dates", dateArray.join(", "));
+                // Update the button's data attribute with the joined dateArray, using newline separators
+                document.getElementById("copyButton").setAttribute("data-dates", dateArray.join("\n"));
             }
         });
 
@@ -82,15 +82,14 @@
             var datesToCopy = this.getAttribute("data-dates");
 
             // Create a temporary input to hold the text
-            var tempInput = document.createElement("input");
+            var tempInput = document.createElement("textarea"); // Using textarea to handle multiline
             document.body.appendChild(tempInput);
             tempInput.value = datesToCopy;
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
 
-            // Provide feedback that the dates were copied
-            alert("Dates copied to clipboard: " + datesToCopy);
+            // No pop-up feedback as requested
         });
     </script>
 
