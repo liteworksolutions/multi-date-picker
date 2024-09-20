@@ -5,20 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Date Picker</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        #selectedDatesList {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        #selectedDatesList ul {
+            padding-left: 20px;
+        }
+        #selectedDatesList ul li {
+            list-style-type: disc;
+        }
+    </style>
 </head>
 <body>
 
+    <h1>Select Multiple Dates</h1>
     <input id="multiDatePicker" type="text" placeholder="Select multiple dates" style="width: 100%; padding: 10px; font-size: 16px;"/>
+    
+    <!-- Section where selected dates will be listed -->
+    <div id="selectedDatesList">
+        <h3>Selected Dates:</h3>
+        <ul id="datesList"></ul>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Initialize Flatpickr with multi-date selection
         flatpickr("#multiDatePicker", {
             mode: "multiple",
-            dateFormat: "Y-m-d", // Change this to your desired date format
+            dateFormat: "Y-m-d", // Change this to your preferred format
             minDate: "today", // Disable past dates
             altInput: true,
-            altFormat: "F j, Y", // Display a friendly format
+            altFormat: "F j, Y", // Friendly display of dates
+            onChange: function(selectedDates, dateStr, instance) {
+                // Get the unordered list element where dates will be displayed
+                var datesList = document.getElementById("datesList");
+                
+                // Clear the current list
+                datesList.innerHTML = "";
+
+                // Loop through the selected dates and add them to the list
+                selectedDates.forEach(function(date) {
+                    var listItem = document.createElement("li");
+                    listItem.textContent = instance.formatDate(date, "F j, Y"); // Format date as 'Month Day, Year'
+                    datesList.appendChild(listItem);
+                });
+            }
         });
     </script>
+
 </body>
 </html>
