@@ -16,17 +16,29 @@
         #selectedDatesList ul li {
             list-style-type: disc;
         }
+        #copyButton {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #copyButton:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
 
     <h1>Select Multiple Dates</h1>
     <input id="multiDatePicker" type="text" placeholder="Select multiple dates" style="width: 100%; padding: 10px; font-size: 16px;"/>
-    
+
     <!-- Section where selected dates will be listed -->
     <div id="selectedDatesList">
         <h3>Selected Dates:</h3>
         <ul id="datesList"></ul>
+        <button id="copyButton">Copy Dates to Clipboard</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -45,13 +57,40 @@
                 // Clear the current list
                 datesList.innerHTML = "";
 
+                // Create an array to store formatted dates
+                var dateArray = [];
+
                 // Loop through the selected dates and add them to the list
                 selectedDates.forEach(function(date) {
                     var listItem = document.createElement("li");
-                    listItem.textContent = instance.formatDate(date, "F j, Y"); // Format date as 'Month Day, Year'
+                    var formattedDate = instance.formatDate(date, "F j, Y"); // Format date as 'Month Day, Year'
+                    listItem.textContent = formattedDate;
                     datesList.appendChild(listItem);
+
+                    // Add formatted date to the array
+                    dateArray.push(formattedDate);
                 });
+
+                // Update the button's data attribute with the joined dateArray
+                document.getElementById("copyButton").setAttribute("data-dates", dateArray.join(", "));
             }
+        });
+
+        // Copy to clipboard functionality
+        document.getElementById("copyButton").addEventListener("click", function() {
+            // Get the dates stored in the button's data attribute
+            var datesToCopy = this.getAttribute("data-dates");
+
+            // Create a temporary input to hold the text
+            var tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = datesToCopy;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            // Provide feedback that the dates were copied
+            alert("Dates copied to clipboard: " + datesToCopy);
         });
     </script>
 
